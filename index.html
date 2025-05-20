@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microservices Quiz</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    .question {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+    .result {
+      font-weight: bold;
+    }
+    .incorrect {
+      background-color: #f8d7da;
+    }
+  </style>
+</head>
+<body class="bg-light p-4">
+  <div class="container">
+    <h1 class="mb-4">Microservices Quiz</h1>
+    <form id="quizForm"></form>
+    <button type="button" class="btn btn-primary" onclick="checkAnswers()">Kiểm tra kết quả</button>
+    <div id="result" class="mt-4 result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 'q1',
+        text: '1. Kiến trúc Monolithic thường đặc trưng bởi:',
+        options: {
+          a: 'A. Các service độc lập hoàn toàn',
+          b: 'B. Tích hợp tất cả thành một ứng dụng duy nhất',
+          c: 'C. Giao tiếp qua message queue',
+          d: 'D. Phân chia theo domain rõ ràng'
+        },
+        answer: 'b'
+      },
+      {
+        id: 'q2',
+        text: '2. Mục tiêu chính của Circuit Breaker là:',
+        options: {
+          a: 'A. Chia nhỏ service',
+          b: 'B. Giảm lỗi lan truyền khi một service bị hỏng',
+          c: 'C. Triển khai dễ hơn',
+          d: 'D. Ghi log chi tiết'
+        },
+        answer: 'b'
+      }
+    ];
+
+    const form = document.getElementById('quizForm');
+    questions.forEach(q => {
+      const div = document.createElement('div');
+      div.classList.add('question');
+      div.id = `box-${q.id}`;
+
+      const label = document.createElement('label');
+      label.classList.add('form-label');
+      label.textContent = q.text;
+      div.appendChild(label);
+
+      for (const key in q.options) {
+        const option = document.createElement('div');
+        option.innerHTML = `<input type="radio" name="${q.id}" value="${key}"> ${q.options[key]}`;
+        div.appendChild(option);
+      }
+
+      form.appendChild(div);
+    });
+
+    function checkAnswers() {
+      let score = 0;
+      questions.forEach(q => {
+        const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+        const box = document.getElementById(`box-${q.id}`);
+        box.classList.remove('incorrect');
+        if (selected && selected.value === q.answer) {
+          score++;
+        } else {
+          box.classList.add('incorrect');
+        }
+      });
+      document.getElementById('result').textContent = `Bạn trả lời đúng ${score}/${questions.length} câu.`;
+    }
+  </script>
+</body>
+</html>
